@@ -291,6 +291,43 @@ print_prime_numbers(T start,
     }
 }
 
+/**
+ * Prints perfect numbers within a specified range.
+ * 
+ * @tparam T Type of the numbers (must be integral)
+ * @param start Starting number (inclusive)
+ * @param end Ending number (inclusive)
+ * @param header Optional header message
+ * @param prefix Text to prepend to each perfect number
+ * @param suffix Text to append to each perfect number
+ * @throws std::invalid_argument if start is less than 1 or end is less than start
+ */
+template<typename T>
+typename std::enable_if<std::is_integral<T>::value>::type
+print_perfect_numbers(T start, 
+                     T end,
+                     const std::string& header = "Perfect Numbers:",
+                     const std::string& prefix = "", 
+                     const std::string& suffix = "") {
+    if (start < 1) {
+        start = 1;  // Adjust start to a valid value if needed
+    }
+    
+    if (end < start) {
+        throw std::invalid_argument("End value must be greater than or equal to start value");
+    }
+    
+    if (!header.empty()) {
+        std::cout << header << std::endl;
+    }
+    
+    for (T i = start; i <= end; ++i) {
+        if (is_perfect_number<T>(i) == PerfectNumberType::Perfect) {
+            std::cout << prefix << i << suffix << std::endl;
+        }
+    }
+}
+
 } // namespace mylib
 
 #endif // MYLIB_IO_H
