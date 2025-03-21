@@ -59,6 +59,16 @@ void format_result(const T& value,
                  const std::string& prefix = "",
                  const std::string& suffix = "");
 
+template<typename CharT>
+typename std::enable_if<std::is_same<CharT, char>::value || 
+                         std::is_same<CharT, wchar_t>::value>::type
+print_char_range(CharT start, 
+                CharT end, 
+                const std::string& header = "",
+                const std::string& prefix = "", 
+                const std::string& suffix = "",
+                bool descending = false);
+
 // Template implementations
 
 /**
@@ -174,6 +184,35 @@ void format_result(const T& value,
     output << prefix << message << ": " << value << suffix;
     
     std::cout << output.str() << std::endl;
+}
+
+/**
+ * Prints a range of characters from start to end (inclusive).
+ */
+template<typename CharT>
+typename std::enable_if<std::is_same<CharT, char>::value || 
+                         std::is_same<CharT, wchar_t>::value>::type
+print_char_range(CharT start, 
+                CharT end, 
+                const std::string& header,
+                const std::string& prefix, 
+                const std::string& suffix,
+                bool descending) {
+    if (!header.empty()) {
+        std::cout << header << std::endl;
+    }
+    
+    if (descending) {
+        // Print from end down to start
+        for (CharT c = end; c >= start; --c) {
+            std::cout << prefix << c << suffix << std::endl;
+        }
+    } else {
+        // Print from start up to end
+        for (CharT c = start; c <= end; ++c) {
+            std::cout << prefix << c << suffix << std::endl;
+        }
+    }
 }
 
 } // namespace mylib

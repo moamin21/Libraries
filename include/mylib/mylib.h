@@ -8,6 +8,7 @@
 #include "operations.h"
 #include "calculator.h"
 #include "data_container.h"
+#include "auth.h"
 
 // Main namespace for all library components
 namespace mylib {
