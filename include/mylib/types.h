@@ -71,6 +71,22 @@ void print_number_properties(T number) {
     std::cout << std::endl;
 }
 
+/**
+ * Enumeration for prime number properties.
+ */
+enum class PrimeType {
+    Prime = 1,
+    NotPrime = 2
+};
+
+/**
+ * Converts a PrimeType enum value to its string representation.
+ *
+ * @param type The PrimeType to convert
+ * @return String representation of the PrimeType
+ */
+std::string to_string(PrimeType type);
+
 } // namespace mylib
 
 #endif // MYLIB_TYPES_H

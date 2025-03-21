@@ -13,4 +13,12 @@ std::string to_string(NumberType type) {
     }
 }
 
+std::string to_string(PrimeType type) {
+    switch (type) {
+        case PrimeType::Prime: return "Prime";
+        case PrimeType::NotPrime: return "Not Prime";
+        default: return "Unknown";
+    }
+}
+
 } // namespace mylib

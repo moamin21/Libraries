@@ -215,6 +215,91 @@ print_char_range(CharT start,
     }
 }
 
+/**
+ * Prints a multiplication table of specified dimensions.
+ * 
+ * @tparam T Type of numbers to use in the table
+ * @param rows Number of rows in the table
+ * @param columns Number of columns in the table
+ * @param title Optional title for the table
+ */
+template<typename T = int>
+typename std::enable_if<std::is_arithmetic<T>::value>::type
+print_multiplication_table(T rows = 10, 
+                          T columns = 10, 
+                          const std::string& title = "Multiplication Table") {
+    // Print title
+    std::cout << "\n\n\t\t\t " << title << "\n\n";
+    
+    // Print column headers
+    std::cout << "\t";
+    for (T j = 1; j <= columns; ++j) {
+        std::cout << j << "\t";
+    }
+    
+    // Print separator
+    std::cout << "\n";
+    for (T j = 0; j <= columns; ++j) {
+        std::cout << "________";
+    }
+    std::cout << "\n";
+    
+    // Print multiplication table
+    for (T i = 1; i <= rows; ++i) {
+        // Print row identifier with proper formatting
+        std::cout << " " << i;
+        if (i < 10) {
+            std::cout << " |";
+        } else {
+            std::cout << " |";
+        }
+        std::cout << "\t";
+        
+        // Print row values
+        for (T j = 1; j <= columns; ++j) {
+            // Use the multiply function from calculator.h
+            std::cout << calculator::multiply(i, j) << "\t";
+        }
+        std::cout << std::endl;
+    }
+}
+
+/**
+ * Prints prime numbers within a specified range.
+ * 
+ * @tparam T Type of the numbers (must be integral)
+ * @param start Starting number (inclusive)
+ * @param end Ending number (inclusive)
+ * @param header Optional header message
+ * @param prefix Text to prepend to each prime number
+ * @param suffix Text to append to each prime number
+ */
+template<typename T>
+typename std::enable_if<std::is_integral<T>::value>::type
+print_prime_numbers(T start, 
+                   T end,
+                   const std::string& header = "Prime Numbers:",
+                   const std::string& prefix = "", 
+                   const std::string& suffix = "") {
+    if (start < 1) {
+        start = 1;  // Adjust start to a valid value if needed
+    }
+    
+    if (end < start) {
+        throw std::invalid_argument("End value must be greater than or equal to start value");
+    }
+    
+    if (!header.empty()) {
+        std::cout << header << std::endl;
+    }
+    
+    for (T i = start; i <= end; ++i) {
+        if (calculator::is_prime<T>(i) == PrimeType::Prime) {
+            std::cout << prefix << i << suffix << std::endl;
+        }
+    }
+}
+
 } // namespace mylib
 
 #endif // MYLIB_IO_H
