@@ -265,6 +265,44 @@ print_multiplication_table(T rows = 10,
 }
 
 /**
+ * Checks if a number is prime.
+ * 
+ * @param number The number to check
+ * @return PrimeType::Prime if the number is prime, PrimeType::NotPrime otherwise
+ * @throws std::invalid_argument if number is less than or equal to 0
+ */
+template<typename T>
+typename std::enable_if<std::is_integral<T>::value, PrimeType>::type
+is_prime(T number) {
+    if (number <= 0) {
+        throw std::invalid_argument("Number must be positive");
+    }
+    
+    if (number == 1) {
+        return PrimeType::NotPrime;  // 1 is not considered prime
+    }
+    
+    if (number == 2 || number == 3) {
+        return PrimeType::Prime;  // 2 and 3 are prime
+    }
+    
+    // Check if number is divisible by 2
+    if (number % 2 == 0) {
+        return PrimeType::NotPrime;
+    }
+    
+    // Check odd divisors up to square root of number
+    T limit = static_cast<T>(std::sqrt(number));
+    for (T i = 3; i <= limit; i += 2) {
+        if (number % i == 0) {
+            return PrimeType::NotPrime;
+        }
+    }
+    
+    return PrimeType::Prime;
+}
+
+/**
  * Prints prime numbers within a specified range.
  * 
  * @tparam T Type of the numbers (must be integral)
