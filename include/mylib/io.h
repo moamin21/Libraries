@@ -7,7 +7,9 @@
 #include <sstream>
 #include <string>
 #include <type_traits>
+#include <cmath> // Added for sqrt in is_prime
 
+#include "types.h" // Added to get PrimeType definition
 #include "validators.h"
 
 namespace mylib {
@@ -68,6 +70,44 @@ print_char_range(CharT start,
                 const std::string& prefix = "", 
                 const std::string& suffix = "",
                 bool descending = false);
+
+/**
+ * Checks if a number is prime.
+ * 
+ * @param number The number to check
+ * @return PrimeType::Prime if the number is prime, PrimeType::NotPrime otherwise
+ * @throws std::invalid_argument if number is less than or equal to 0
+ */
+template<typename T>
+typename std::enable_if<std::is_integral<T>::value, PrimeType>::type
+is_prime(T number) {
+    if (number <= 0) {
+        throw std::invalid_argument("Number must be positive");
+    }
+    
+    if (number == 1) {
+        return PrimeType::NotPrime;  // 1 is not considered prime
+    }
+    
+    if (number == 2 || number == 3) {
+        return PrimeType::Prime;  // 2 and 3 are prime
+    }
+    
+    // Check if number is divisible by 2
+    if (number % 2 == 0) {
+        return PrimeType::NotPrime;
+    }
+    
+    // Check odd divisors up to square root of number
+    T limit = static_cast<T>(std::sqrt(number));
+    for (T i = 3; i <= limit; i += 2) {
+        if (number % i == 0) {
+            return PrimeType::NotPrime;
+        }
+    }
+    
+    return PrimeType::Prime;
+}
 
 // Template implementations
 
@@ -216,93 +256,6 @@ print_char_range(CharT start,
 }
 
 /**
- * Prints a multiplication table of specified dimensions.
- * 
- * @tparam T Type of numbers to use in the table
- * @param rows Number of rows in the table
- * @param columns Number of columns in the table
- * @param title Optional title for the table
- */
-template<typename T = int>
-typename std::enable_if<std::is_arithmetic<T>::value>::type
-print_multiplication_table(T rows = 10, 
-                          T columns = 10, 
-                          const std::string& title = "Multiplication Table") {
-    // Print title
-    std::cout << "\n\n\t\t\t " << title << "\n\n";
-    
-    // Print column headers
-    std::cout << "\t";
-    for (T j = 1; j <= columns; ++j) {
-        std::cout << j << "\t";
-    }
-    
-    // Print separator
-    std::cout << "\n";
-    for (T j = 0; j <= columns; ++j) {
-        std::cout << "________";
-    }
-    std::cout << "\n";
-    
-    // Print multiplication table
-    for (T i = 1; i <= rows; ++i) {
-        // Print row identifier with proper formatting
-        std::cout << " " << i;
-        if (i < 10) {
-            std::cout << " |";
-        } else {
-            std::cout << " |";
-        }
-        std::cout << "\t";
-        
-        // Print row values
-        for (T j = 1; j <= columns; ++j) {
-            // Use the multiply function from calculator.h
-            std::cout << calculator::multiply(i, j) << "\t";
-        }
-        std::cout << std::endl;
-    }
-}
-
-/**
- * Checks if a number is prime.
- * 
- * @param number The number to check
- * @return PrimeType::Prime if the number is prime, PrimeType::NotPrime otherwise
- * @throws std::invalid_argument if number is less than or equal to 0
- */
-template<typename T>
-typename std::enable_if<std::is_integral<T>::value, PrimeType>::type
-is_prime(T number) {
-    if (number <= 0) {
-        throw std::invalid_argument("Number must be positive");
-    }
-    
-    if (number == 1) {
-        return PrimeType::NotPrime;  // 1 is not considered prime
-    }
-    
-    if (number == 2 || number == 3) {
-        return PrimeType::Prime;  // 2 and 3 are prime
-    }
-    
-    // Check if number is divisible by 2
-    if (number % 2 == 0) {
-        return PrimeType::NotPrime;
-    }
-    
-    // Check odd divisors up to square root of number
-    T limit = static_cast<T>(std::sqrt(number));
-    for (T i = 3; i <= limit; i += 2) {
-        if (number % i == 0) {
-            return PrimeType::NotPrime;
-        }
-    }
-    
-    return PrimeType::Prime;
-}
-
-/**
  * Prints prime numbers within a specified range.
  * 
  * @tparam T Type of the numbers (must be integral)
@@ -332,7 +285,7 @@ print_prime_numbers(T start,
     }
     
     for (T i = start; i <= end; ++i) {
-        if (calculator::is_prime<T>(i) == PrimeType::Prime) {
+        if (is_prime<T>(i) == PrimeType::Prime) {
             std::cout << prefix << i << suffix << std::endl;
         }
     }
