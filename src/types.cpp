@@ -21,4 +21,12 @@ std::string to_string(PrimeType type) {
     }
 }
 
+std::string to_string(PerfectNumberType type) {
+    switch (type) {
+        case PerfectNumberType::Perfect: return "Perfect";
+        case PerfectNumberType::NotPerfect: return "Not Perfect";
+        default: return "Unknown";
+    }
+}
+
 } // namespace mylib

@@ -87,6 +87,48 @@ enum class PrimeType {
  */
 std::string to_string(PrimeType type);
 
+/**
+ * Enumeration for perfect number status.
+ */
+enum class PerfectNumberType {
+    Perfect = 1,
+    NotPerfect = 2
+};
+
+/**
+ * Converts a PerfectNumberType enum value to its string representation.
+ */
+std::string to_string(PerfectNumberType type);
+
+/**
+ * Checks if a number is a perfect number.
+ * A perfect number is equal to the sum of its proper divisors.
+ * 
+ * @tparam T Type of the number (must be integral)
+ * @param number The number to check
+ * @return PerfectNumberType::Perfect if the number is perfect, 
+ *         PerfectNumberType::NotPerfect otherwise
+ * @throws std::invalid_argument if number is less than or equal to 0
+ */
+template<typename T>
+typename std::enable_if<std::is_integral<T>::value, PerfectNumberType>::type
+is_perfect_number(T number) {
+    if (number <= 0) {
+        throw std::invalid_argument("Number must be positive");
+    }
+    
+    T sum = 0;
+    
+    // Find all proper divisors and sum them
+    for (T i = 1; i < number; ++i) {
+        if (number % i == 0) {
+            sum += i;
+        }
+    }
+    
+    return (sum == number) ? PerfectNumberType::Perfect : PerfectNumberType::NotPerfect;
+}
+
 } // namespace mylib
 
 #endif // MYLIB_TYPES_H
